@@ -1,4 +1,9 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Repositories;
+import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
+import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public class ProjectRepository {
+@Repository
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 }
