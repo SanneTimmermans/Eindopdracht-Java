@@ -29,6 +29,7 @@ public class OnderdeelController {
         dto.onderdeelnaam = savedOnderdeel.getOnderdeelnaam();
         dto.artikelnummer = savedOnderdeel.getArtikelnummer();
         dto.prijs = savedOnderdeel.getPrijs();
+        dto.bestelstatus =savedOnderdeel.getBestelstatus();
 
         if (savedOnderdeel.getProject() != null) {
             dto.projectId = savedOnderdeel.getProject().getId();

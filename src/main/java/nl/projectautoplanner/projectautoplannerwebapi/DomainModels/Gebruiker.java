@@ -10,10 +10,15 @@ public class Gebruiker {
     private Long id;
     private String gebruikersnaam;
     private String wachtwoord;
-    private String naam;
+    private String voornaam;
+    private String achternaam;
     private String email;
     private String telefoon;
-    private String rol;
+    private String adres;
+    @Enumerated(EnumType.STRING)
+    private GebruikerRol rol;
+    public enum GebruikerRol {EIGENAAR, MONTEUR};
+
     public Gebruiker() {
     }
 
@@ -41,14 +46,6 @@ public class Gebruiker {
         this.wachtwoord = wachtwoord;
     }
 
-    public String getNaam() {
-        return naam;
-    }
-
-    public void setNaam(String naam) {
-        this.naam = naam;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -65,11 +62,35 @@ public class Gebruiker {
         this.telefoon = telefoon;
     }
 
-    public String getRol() {
+    public GebruikerRol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRol(GebruikerRol gebruikerRol) {
+        this.rol = gebruikerRol;
+    }
+
+    public String getVoornaam() {
+        return voornaam;
+    }
+
+    public void setVoornaam(String voornaam) {
+        this.voornaam = voornaam;
+    }
+
+    public String getAchternaam() {
+        return achternaam;
+    }
+
+    public void setAchternaam(String achternaam) {
+        this.achternaam = achternaam;
+    }
+
+    public String getAdres() {
+        return adres;
+    }
+
+    public void setAdres(String adres) {
+        this.adres = adres;
     }
 }
