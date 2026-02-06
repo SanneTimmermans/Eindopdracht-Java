@@ -1,6 +1,8 @@
 package nl.projectautoplanner.projectautoplannerwebapi.DomainModels;
 
 import jakarta.persistence.*;
+import nl.projectautoplanner.projectautoplannerwebapi.Contollers.OnderdeelController;
+import java.util.List;
 
 @Entity
 @Table(name = "projecten")
@@ -11,7 +13,19 @@ public class Project {
     private String naam;
     private String merk;
     private String model;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Onderdeel> onderdelen;
+
     public Project() {
+    }
+
+    public List<Onderdeel> getOnderdelen() {
+        return onderdelen;
+    }
+
+    public void setOnderdelen(List<Onderdeel> onderdelen) {
+        this.onderdelen = onderdelen;
     }
 
     public Long getId() {
