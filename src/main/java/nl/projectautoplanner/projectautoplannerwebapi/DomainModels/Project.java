@@ -40,8 +40,8 @@ public class Project {
         return projectnaam;
     }
 
-    public void setProjectnaam(String naam) {
-        this.projectnaam = naam;
+    public void setProjectnaam(String projectnaam) {
+        this.projectnaam = projectnaam;
     }
 
     public String getMerk() {
