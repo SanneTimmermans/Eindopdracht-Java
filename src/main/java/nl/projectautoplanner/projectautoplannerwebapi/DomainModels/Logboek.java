@@ -11,6 +11,16 @@ public class Logboek {
     private Long id;
     private String beschrijving;
     private LocalDateTime datumTijd;
+    private double uren;
+
+    @ManyToOne
+    @JoinColumn(name = "monteur_id")
+    private Gebruiker monteur;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     public Logboek() {
         this.datumTijd = LocalDateTime.now();
     }
@@ -37,5 +47,29 @@ public class Logboek {
 
     public void setDatumTijd(LocalDateTime datumTijd) {
         this.datumTijd = datumTijd;
+    }
+
+    public double getUren() {
+        return this.uren;
+    }
+
+    public void setUren(double uren) {
+        this.uren = uren;
+    }
+
+    public Gebruiker getMonteur() {
+        return monteur;
+    }
+
+    public void setMonteur(Gebruiker monteur) {
+        this.monteur = monteur;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
