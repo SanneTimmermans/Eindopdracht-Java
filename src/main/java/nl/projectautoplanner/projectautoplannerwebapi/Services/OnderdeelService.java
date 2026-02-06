@@ -21,4 +21,18 @@ public class OnderdeelService {
     public Onderdeel saveOnderdeel(Onderdeel onderdeel) {
         return onderdeelRepository.save(onderdeel);
     }
+
+    public void deleteOnderdeel(long id) {
+        onderdeelRepository.deleteById(id);
+    }
+
+    public Onderdeel updateOnderdeel(Long id, Onderdeel nieuwOnderdeel) {
+        return onderdeelRepository.findById(id).map(bestaandOnderdeel -> {
+            bestaandOnderdeel.setOnderdeelnaam(nieuwOnderdeel.getOnderdeelnaam());
+            bestaandOnderdeel.setArtikelnummer(nieuwOnderdeel.getArtikelnummer());
+            bestaandOnderdeel.setPrijs(nieuwOnderdeel.getPrijs());
+            bestaandOnderdeel.setBestelstatus(nieuwOnderdeel.getBestelstatus());
+            return onderdeelRepository.save(bestaandOnderdeel);
+        }).orElseThrow(() -> new RuntimeException("Onderdeel niet gevonden."));
+    }
 }

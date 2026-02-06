@@ -11,12 +11,35 @@ public class Onderdeel {
     private String onderdeelnaam;
     private String artikelnummer;
     private double prijs;
-    private enum status{NOG_BESTELLEN, BESTELD, ONTVANGEN, GEANNULEERD};
+    @Enumerated(EnumType.STRING)
+    private Bestelstatus bestelstatus;
+    public enum Bestelstatus{NOG_BESTELLEN, BESTELD, ONTVANGEN, GEANNULEERD};
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     public Onderdeel() {
+    }
+
+    public Bestelstatus getBestelstatus() {
+        return bestelstatus;
+    }
+
+    public void setBestelstatus(Bestelstatus bestelstatus) {
+        this.bestelstatus = bestelstatus;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     public void setId(Long id) {
@@ -47,3 +70,5 @@ public class Onderdeel {
         this.prijs = prijs;
     }
 }
+
+
