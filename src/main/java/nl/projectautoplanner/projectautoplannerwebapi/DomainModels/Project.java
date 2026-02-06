@@ -1,7 +1,7 @@
 package nl.projectautoplanner.projectautoplannerwebapi.DomainModels;
 
 import jakarta.persistence.*;
-import nl.projectautoplanner.projectautoplannerwebapi.Contollers.OnderdeelController;
+
 import java.util.List;
 
 @Entity
@@ -10,7 +10,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String naam;
+    private String projectnaam;
     private String merk;
     private String model;
 
@@ -36,12 +36,12 @@ public class Project {
         this.id = id;
     }
 
-    public String getNaam() {
-        return naam;
+    public String getProjectnaam() {
+        return projectnaam;
     }
 
-    public void setNaam(String naam) {
-        this.naam = naam;
+    public void setProjectnaam(String naam) {
+        this.projectnaam = naam;
     }
 
     public String getMerk() {
