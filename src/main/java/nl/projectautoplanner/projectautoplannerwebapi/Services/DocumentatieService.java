@@ -8,7 +8,6 @@ import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import javax.swing.text.*;
 
 @Service
 public class DocumentatieService {
@@ -22,7 +21,7 @@ public class DocumentatieService {
         this.onderdeelRepository = onderdeelRepository;
     }
     public List<Documentatie> getDocumentatieByProject(Long projectId) {
-        return documentatieRepository.findByProjectId(projectId);
+        return documentatieRepository.findByProject_Id(projectId);
     }
 
     public Documentatie saveDocumentatie(String naam, String type, String url, String tekst, Long projectId, Long onderdeelId) {

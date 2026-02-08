@@ -31,10 +31,10 @@ public class FactuurService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project niet gevonden"));
         double uurtarief = 75.0;
-        double urenKosten = logboekRepository.findByProjectId(projectId).stream()
+        double urenKosten = logboekRepository.findByProject_Id(projectId).stream()
                 .mapToDouble(log -> log.getUren() * uurtarief)
                 .sum();
-        double onderdelenKosten = onderdeelRepository.findByProjectId(projectId).stream()
+        double onderdelenKosten = onderdeelRepository.findByProject_Id(projectId).stream()
                 .mapToDouble(Onderdeel::getPrijs)
                 .sum();
         Factuur factuur = new Factuur();

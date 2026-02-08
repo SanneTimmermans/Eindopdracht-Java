@@ -6,5 +6,5 @@ public class DocumentatieRequestDTO {
     public String url;
     public String tekstInhoud;
     public Long projectId;
-    public Long onderdeelId;
+    public Long onderdeelnaam;
 }

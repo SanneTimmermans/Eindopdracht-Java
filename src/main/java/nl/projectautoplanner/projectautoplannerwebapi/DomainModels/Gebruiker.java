@@ -3,7 +3,7 @@ package nl.projectautoplanner.projectautoplannerwebapi.DomainModels;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Gebruikers")
+@Table(name = "gebruikers")
 public class Gebruiker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

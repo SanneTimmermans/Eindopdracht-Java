@@ -1,4 +1,4 @@
-package nl.projectautoplanner.projectautoplannerwebapi.Contollers;
+package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.LogboekRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.LogboekResponseDTO;
@@ -21,7 +21,7 @@ public class LogboekController {
     @PostMapping
     public ResponseEntity<LogboekResponseDTO> createLogboek(@RequestBody LogboekRequestDTO requestDTO) {
         Logboek savedLogboek = logboekService.saveLogboek(
-                requestDTO.omschrijving,
+                requestDTO.beschrijving,
                 requestDTO.uren,
                 requestDTO.monteurId,
                 requestDTO.projectId);
@@ -30,7 +30,7 @@ public class LogboekController {
     private LogboekResponseDTO convertToDTO(Logboek logboek) {
         LogboekResponseDTO dto = new LogboekResponseDTO();
         dto.id = logboek.getId();
-        dto.omschrijving = logboek.getBeschrijving();
+        dto.beschrijving = logboek.getBeschrijving();
         dto.uren = logboek.getUren();
         dto.datumTijd = logboek.getDatumTijd();
         if (logboek.getMonteur() != null) {

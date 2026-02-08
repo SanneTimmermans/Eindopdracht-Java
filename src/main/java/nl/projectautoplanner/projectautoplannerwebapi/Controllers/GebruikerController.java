@@ -1,4 +1,4 @@
-package nl.projectautoplanner.projectautoplannerwebapi.Contollers;
+package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.GebruikerResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
@@ -34,7 +34,7 @@ public class GebruikerController {
         GebruikerResponseDTO dto = new GebruikerResponseDTO();
         return ResponseEntity.ok(convertToDTO(savedGebruiker));
     }
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<GebruikerResponseDTO> getGebruiker(@PathVariable Long id) {
         Gebruiker g = gebruikerService.getGebruikerById(id);
         return ResponseEntity.ok(convertToDTO(g));

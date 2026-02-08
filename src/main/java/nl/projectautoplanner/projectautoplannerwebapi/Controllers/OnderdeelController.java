@@ -1,5 +1,6 @@
-package nl.projectautoplanner.projectautoplannerwebapi.Contollers;
+package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.OnderdeelRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.Services.OnderdeelService;
@@ -17,24 +18,36 @@ public class OnderdeelController {
         this.onderdeelService = onderdeelService;
     }
 
-    @GetMapping
-    public List<Onderdeel> getAllOnderdelen() {
-        return onderdeelService.getAllOnderdelen();
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<OnderdeelResponseDTO>> getAllOnderdelen(@PathVariable Long projectId) {
+        List<Onderdeel> onderdelen = onderdeelService.getAllOnderdelen(projectId);
+        List<OnderdeelResponseDTO> dtos = onderdelen.stream()
+                .map(this::convertToDTO)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
-    @PostMapping
-    public ResponseEntity<OnderdeelResponseDTO> createOnderdeel(@RequestBody Onderdeel onderdeel) {
-        Onderdeel savedOnderdeel = onderdeelService.saveOnderdeel(onderdeel);
+    @PostMapping("/project/{projectId}")
+    public ResponseEntity<OnderdeelResponseDTO> createOnderdeel(@PathVariable Long projectId, @RequestBody OnderdeelRequestDTO requestDTO) {
+        Onderdeel savedOnderdeel = onderdeelService.saveOnderdeel(
+                requestDTO.onderdeelnaam,
+                requestDTO.artikelnummer,
+                requestDTO.prijs,
+                requestDTO.bestelstatus,
+                projectId);
+        return ResponseEntity.ok(convertToDTO(savedOnderdeel));
+    }
+    private OnderdeelResponseDTO convertToDTO(Onderdeel onderdeel) {
         OnderdeelResponseDTO dto = new OnderdeelResponseDTO();
-        dto.onderdeelnaam = savedOnderdeel.getOnderdeelnaam();
-        dto.artikelnummer = savedOnderdeel.getArtikelnummer();
-        dto.prijs = savedOnderdeel.getPrijs();
-        dto.bestelstatus =savedOnderdeel.getBestelstatus();
+        dto.onderdeelnaam = onderdeel.getOnderdeelnaam();
+        dto.artikelnummer = onderdeel.getArtikelnummer();
+        dto.prijs = onderdeel.getPrijs();
+        dto.bestelstatus = onderdeel.getBestelstatus();
 
-        if (savedOnderdeel.getProject() != null) {
-            dto.projectId = savedOnderdeel.getProject().getId();
+        if (onderdeel.getProject() != null) {
+            dto.projectId = onderdeel.getProject().getId();
         }
-        return ResponseEntity.ok(dto);
+        return dto;
     }
 
     @DeleteMapping("/{id}")
