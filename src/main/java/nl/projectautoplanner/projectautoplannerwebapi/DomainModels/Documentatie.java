@@ -15,8 +15,12 @@ public class Documentatie {
     private String tekstInhoud;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = true)
     private Project project;
+
+    @ManyToOne
+    @JoinColumn(name = "onderdeel_id", nullable = true)
+    private Onderdeel onderdeel;
 
     public Documentatie() {
     }
@@ -67,5 +71,13 @@ public class Documentatie {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Onderdeel getOnderdeel() {
+        return onderdeel;
+    }
+
+    public void setOnderdeel(Onderdeel onderdeel) {
+        this.onderdeel = onderdeel;
     }
 }
