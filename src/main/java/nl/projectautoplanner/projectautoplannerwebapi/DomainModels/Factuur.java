@@ -12,6 +12,11 @@ public class Factuur {
     private LocalDate factuurDatum;
     private double totaalBedrag;
     private boolean isBetaald;
+
+    @OneToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     public Factuur() {
     }
 
@@ -45,5 +50,13 @@ public class Factuur {
 
     public void setBetaald(boolean betaald) {
         isBetaald = betaald;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
