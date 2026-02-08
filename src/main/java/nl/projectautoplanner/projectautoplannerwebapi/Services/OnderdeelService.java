@@ -1,7 +1,9 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
+import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
+import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -9,16 +11,26 @@ import java.util.List;
 public class OnderdeelService {
 
     private final OnderdeelRepository onderdeelRepository;
+    private final ProjectRepository projectRepository;
 
-    public OnderdeelService(OnderdeelRepository onderdeelRepository) {
+    public OnderdeelService(OnderdeelRepository onderdeelRepository, ProjectRepository projectRepository) {
         this.onderdeelRepository = onderdeelRepository;
+        this.projectRepository = projectRepository;
     }
 
-    public List<Onderdeel> getAllOnderdelen() {
+    public List<Onderdeel> getAllOnderdelen(Long projectId) {
         return onderdeelRepository.findAll();
     }
 
-    public Onderdeel saveOnderdeel(Onderdeel onderdeel) {
+    public Onderdeel saveOnderdeel(String onderdeelnaam, String artikelnummer, double prijs, Onderdeel.Bestelstatus bestelstatus, long projectId) {
+        Onderdeel onderdeel = new Onderdeel();
+        onderdeel.setOnderdeelnaam(onderdeelnaam);
+        onderdeel.setArtikelnummer(artikelnummer);
+        onderdeel.setPrijs(prijs);
+        onderdeel.setBestelstatus(bestelstatus);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project niet gevonden met id: " + projectId));
+        onderdeel.setProject(project);
         return onderdeelRepository.save(onderdeel);
     }
 

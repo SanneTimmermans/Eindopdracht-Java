@@ -17,6 +17,15 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Onderdeel> onderdelen;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Documentatie> documentatieLijst;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Logboek> logboeken;
+
+    @OneToOne(mappedBy = "project")
+    private Factuur factuur;
+
     public Project() {
     }
 
@@ -58,5 +67,29 @@ public class Project {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public List<Documentatie> getDocumentatieLijst() {
+        return documentatieLijst;
+    }
+
+    public void setDocumentatieLijst(List<Documentatie> documentatieLijst) {
+        this.documentatieLijst = documentatieLijst;
+    }
+
+    public List<Logboek> getLogboeken() {
+        return logboeken;
+    }
+
+    public void setLogboeken(List<Logboek> logboeken) {
+        this.logboeken = logboeken;
+    }
+
+    public Factuur getFactuur() {
+        return factuur;
+    }
+
+    public void setFactuur(Factuur factuur) {
+        this.factuur = factuur;
     }
 }

@@ -1,4 +1,4 @@
-package nl.projectautoplanner.projectautoplannerwebapi.Contollers;
+package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Factuur;
 import nl.projectautoplanner.projectautoplannerwebapi.Services.FactuurService;

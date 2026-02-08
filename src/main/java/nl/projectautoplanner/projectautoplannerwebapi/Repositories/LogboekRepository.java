@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface LogboekRepository extends JpaRepository<Logboek, Long> {
-    List<Logboek> findByProjectId(Long projectId);
+    List<Logboek> findByProject_Id(Long projectId);
 }
 

@@ -1,4 +1,4 @@
-package nl.projectautoplanner.projectautoplannerwebapi.Contollers;
+package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.DocumentatieRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.DocumentatieResponseDTO;
@@ -16,7 +16,7 @@ public class DocumentatieController {
     public DocumentatieController(DocumentatieService documentatieService) {
         this.documentatieService = documentatieService;
     }
-    @PostMapping("/{projectId}")
+    @PostMapping
     public ResponseEntity<DocumentatieResponseDTO> addDocumentatie(@RequestBody DocumentatieRequestDTO request) {
         Documentatie saved = documentatieService.saveDocumentatie(
                 request.bestandsnaam,
@@ -24,7 +24,7 @@ public class DocumentatieController {
                 request.url,
                 request.tekstInhoud,
                 request.projectId,
-                request.onderdeelId);
+                request.onderdeelnaam);
 
         return ResponseEntity.ok(convertToDTO(saved));
     }
@@ -39,6 +39,9 @@ public class DocumentatieController {
         if (doc.getProject() != null) {
             dto.projectId = doc.getProject().getId();
             dto.projectnaam = doc.getProject().getProjectnaam();
+        }
+        if (doc.getOnderdeel() != null) {
+            dto.onderdeelnaam = doc.getOnderdeel().getOnderdeelnaam();
         }
         return dto;
     }

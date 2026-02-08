@@ -14,7 +14,11 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public Project createProject(Project project) {
+    public Project createProject(String projectnaam, String merk, String model) {
+        Project project = new Project();
+        project.setProjectnaam(projectnaam);
+        project.setMerk(merk);
+        project.setModel(model);
         return projectRepository.save(project);
     }
 

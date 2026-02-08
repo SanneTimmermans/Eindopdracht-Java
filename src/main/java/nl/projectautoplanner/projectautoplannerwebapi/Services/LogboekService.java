@@ -44,6 +44,6 @@ public class LogboekService {
         return logboekRepository.findAll();
     }
     public List<Logboek> getRegelsByProjectId(Long projectId) {
-        return logboekRepository.findByProjectId(projectId);
+        return logboekRepository.findByProject_Id(projectId);
     }
 }

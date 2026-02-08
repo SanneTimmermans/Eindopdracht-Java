@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DocumentatieRepository extends JpaRepository<Documentatie, Long> {
-    List<Documentatie> findByProjectId(Long projectId);
+    List<Documentatie> findByProject_Id(Long projectId);
 }

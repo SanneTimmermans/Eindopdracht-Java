@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class LogboekResponseDTO {
     public Long id;
-    public String omschrijving;
+    public String beschrijving;
     public double uren;
     public LocalDateTime datumTijd;
     public String monteurNaam;

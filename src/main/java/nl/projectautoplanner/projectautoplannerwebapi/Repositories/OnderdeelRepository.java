@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface OnderdeelRepository extends JpaRepository<Onderdeel, Long> {
-    List<Onderdeel> findByProjectId(Long projectId);
+    List<Onderdeel> findByProject_Id(Long projectId);
 }
 
