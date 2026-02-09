@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.ProjectResponseDTO;
@@ -23,7 +24,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResponseDTO> addProject(@RequestBody ProjectRequestDTO requestDTO) {
+    public ResponseEntity<ProjectResponseDTO> addProject(@Valid @RequestBody ProjectRequestDTO requestDTO) {
         Project savedProject = projectService.createProject(requestDTO);
         return ResponseEntity.ok(convertToDTO(savedProject));
     }

@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.GebruikerRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.GebruikerResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
@@ -32,7 +33,7 @@ public class GebruikerController {
         return dto;
     }
     @PostMapping
-    public ResponseEntity<GebruikerResponseDTO> createGebruiker(@RequestBody GebruikerRequestDTO request) {
+    public ResponseEntity<GebruikerResponseDTO> createGebruiker(@Valid @RequestBody GebruikerRequestDTO request) {
         Gebruiker gebruiker = new Gebruiker();
         gebruiker.setGebruikersnaam(request.gebruikersnaam);
         gebruiker.setVoornaam(request.voornaam);
@@ -51,7 +52,7 @@ public class GebruikerController {
         return ResponseEntity.ok(convertToDTO(gebruiker));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<GebruikerResponseDTO> updateGebruiker(@PathVariable Long id, @RequestBody Gebruiker nieuweData) {
+    public ResponseEntity<GebruikerResponseDTO> updateGebruiker(@PathVariable Long id, @Valid @RequestBody Gebruiker nieuweData) {
         Gebruiker updated = gebruikerService.updateGebruiker(id, nieuweData);
         return ResponseEntity.ok(convertToDTO(updated));
     }

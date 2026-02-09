@@ -1,7 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
 import org.springframework.core.io.Resource;
-import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.DocumentatieRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.DocumentatieResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Documentatie;
 import nl.projectautoplanner.projectautoplannerwebapi.Services.DocumentatieService;

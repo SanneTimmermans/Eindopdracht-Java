@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.OnderdeelRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
@@ -28,7 +29,7 @@ public class OnderdeelController {
     }
 
     @PostMapping("/project/{projectId}")
-    public ResponseEntity<OnderdeelResponseDTO> createOnderdeel(@PathVariable Long projectId, @RequestBody OnderdeelRequestDTO requestDTO) {
+    public ResponseEntity<OnderdeelResponseDTO> createOnderdeel(@PathVariable Long projectId, @Valid @RequestBody OnderdeelRequestDTO requestDTO) {
         Onderdeel savedOnderdeel = onderdeelService.saveOnderdeel(
                 requestDTO.onderdeelnaam,
                 requestDTO.artikelnummer,
@@ -57,7 +58,7 @@ public class OnderdeelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OnderdeelResponseDTO> updateOnderdeel(@PathVariable Long id, @RequestBody Onderdeel onderdeel) {
+    public ResponseEntity<OnderdeelResponseDTO> updateOnderdeel(@PathVariable Long id, @Valid @RequestBody Onderdeel onderdeel) {
         Onderdeel updated = onderdeelService.updateOnderdeel(id, onderdeel);
         OnderdeelResponseDTO dto = new OnderdeelResponseDTO();
         dto.onderdeelnaam = updated.getOnderdeelnaam();
