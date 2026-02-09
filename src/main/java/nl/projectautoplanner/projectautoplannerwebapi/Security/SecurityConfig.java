@@ -59,9 +59,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/documentatie/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.GET, "/documentatie/**").hasAnyRole("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.POST, "/documentatie/upload").hasRole("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/download/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/project/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasAnyRole("ADMIN", "MONTEUR")
 
                         .requestMatchers(HttpMethod.GET, "/**").authenticated()
                         .anyRequest().denyAll())

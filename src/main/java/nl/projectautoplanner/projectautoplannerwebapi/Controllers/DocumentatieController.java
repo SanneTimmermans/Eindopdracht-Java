@@ -1,11 +1,15 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import org.springframework.core.io.Resource;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.DocumentatieRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.DocumentatieResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Documentatie;
 import nl.projectautoplanner.projectautoplannerwebapi.Services.DocumentatieService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -16,18 +20,25 @@ public class DocumentatieController {
     public DocumentatieController(DocumentatieService documentatieService) {
         this.documentatieService = documentatieService;
     }
-    @PostMapping
-    public ResponseEntity<DocumentatieResponseDTO> addDocumentatie(@RequestBody DocumentatieRequestDTO request) {
-        Documentatie saved = documentatieService.saveDocumentatie(
-                request.bestandsnaam,
-                request.bestandtype,
-                request.url,
-                request.tekstInhoud,
-                request.projectId,
-                request.onderdeelnaam);
+    @PostMapping("/upload")
+    public ResponseEntity<DocumentatieResponseDTO> upload(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "projectId", required = false) Long projectId,
+            @RequestParam(value = "onderdeelId", required = false) Long onderdeelId,
+            @RequestParam(value = "tekst", required = false) String tekst) {
 
+        Documentatie saved = documentatieService.storeDocument(file, tekst, projectId, onderdeelId);
         return ResponseEntity.ok(convertToDTO(saved));
     }
+
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<Resource> download(@PathVariable String fileName) {
+        Resource resource = documentatieService.loadFile(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
     private DocumentatieResponseDTO convertToDTO(Documentatie doc) {
         DocumentatieResponseDTO dto = new DocumentatieResponseDTO();
         dto.id = doc.getId();
