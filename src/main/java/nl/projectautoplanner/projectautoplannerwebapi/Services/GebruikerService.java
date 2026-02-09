@@ -2,6 +2,7 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -38,11 +39,6 @@ public class GebruikerService {
             bestaandeGebruiker.setAchternaam(nieuweData.getAchternaam());
             bestaandeGebruiker.setTelefoon(nieuweData.getTelefoon());
             bestaandeGebruiker.setAdres(nieuweData.getAdres());
-
-            if (nieuweData.getWachtwoord() != null && !nieuweData.getWachtwoord().isEmpty()) {
-                bestaandeGebruiker.setWachtwoord(nieuweData.getWachtwoord());
-            }
-
             return gebruikerRepository.save(bestaandeGebruiker);
         }).orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden"));
     }

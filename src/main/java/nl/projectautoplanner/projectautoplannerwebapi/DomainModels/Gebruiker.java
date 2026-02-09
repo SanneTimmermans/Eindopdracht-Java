@@ -17,7 +17,7 @@ public class Gebruiker {
     private String adres;
     @Enumerated(EnumType.STRING)
     private GebruikerRol rol;
-    public enum GebruikerRol {EIGENAAR, MONTEUR};
+    public enum GebruikerRol {EIGENAAR, MONTEUR, ADMIN};
 
     public Gebruiker() {
     }
