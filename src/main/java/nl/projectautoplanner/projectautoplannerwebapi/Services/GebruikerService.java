@@ -10,11 +10,9 @@ import java.util.List;
 public class GebruikerService {
 
     private final GebruikerRepository gebruikerRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public GebruikerService(GebruikerRepository gebruikerRepository, PasswordEncoder passwordEncoder) {
+    public GebruikerService(GebruikerRepository gebruikerRepository) {
         this.gebruikerRepository = gebruikerRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Gebruiker> getAllGebruikers() {
@@ -27,7 +25,6 @@ public class GebruikerService {
     }
 
     public Gebruiker saveGebruiker(Gebruiker gebruiker) {
-        gebruiker.setWachtwoord(passwordEncoder.encode(gebruiker.getWachtwoord()));
         return gebruikerRepository.save(gebruiker);
     }
 
@@ -42,12 +39,6 @@ public class GebruikerService {
             bestaandeGebruiker.setAchternaam(nieuweData.getAchternaam());
             bestaandeGebruiker.setTelefoon(nieuweData.getTelefoon());
             bestaandeGebruiker.setAdres(nieuweData.getAdres());
-
-            if (nieuweData.getWachtwoord() != null && !nieuweData.getWachtwoord().isEmpty()) {
-                String encryptedPassword = passwordEncoder.encode(nieuweData.getWachtwoord());
-                bestaandeGebruiker.setWachtwoord(encryptedPassword);
-            }
-
             return gebruikerRepository.save(bestaandeGebruiker);
         }).orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden"));
     }

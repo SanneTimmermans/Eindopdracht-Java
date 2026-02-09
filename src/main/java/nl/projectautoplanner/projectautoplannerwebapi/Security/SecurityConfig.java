@@ -1,6 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Security;
 
-import ch.qos.logback.core.pattern.Converter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.core.convert.converter.Converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,10 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${client-id}")
+    private String clientId;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -35,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/**").authenticated() //nog get bij facturen
                         .requestMatchers(HttpMethod.POST, "/gebruikers").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/gebruikers/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/**/rol").hasRole("ADMIN") //nog maken
+                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN") //nog maken
                         .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").hasAnyRole("MONTEUR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/projecten/**").hasRole("MONTEUR")
                         .requestMatchers(HttpMethod.POST, "/onderdelen/**").hasRole("MONTEUR")
@@ -74,6 +79,6 @@ public class SecurityConfig {
                 return new ArrayList<>();
             }
         });
-        return jwtAuthenticationConverter;
+        return converter;
     }
 }
