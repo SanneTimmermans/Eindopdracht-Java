@@ -3,9 +3,12 @@ package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.ProjectResponseDTO;
+import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
 import nl.projectautoplanner.projectautoplannerwebapi.Services.ProjectService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -21,10 +24,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectResponseDTO> addProject(@RequestBody ProjectRequestDTO requestDTO) {
-        Project savedProject = projectService.createProject(
-                requestDTO.projectnaam,
-                requestDTO.merk,
-                requestDTO.model);
+        Project savedProject = projectService.createProject(requestDTO);
         return ResponseEntity.ok(convertToDTO(savedProject));
     }
 
@@ -36,24 +36,40 @@ public class ProjectController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        Project project = projectService.getProjectGevalideerd(id, jwt);
+        return ResponseEntity.ok(convertToDTO(project));
+    }
     private ProjectResponseDTO convertToDTO(Project project) {
         ProjectResponseDTO dto = new ProjectResponseDTO();
         dto.id = project.getId();
         dto.projectnaam = project.getProjectnaam();
         dto.merk = project.getMerk();
         dto.model = project.getModel();
+
+        if (project.getEigenaar() != null) {
+            dto.eigenaarNaam = project.getEigenaar().getGebruikersnaam();
+        }
+
+        if (project.getMonteurs() != null) {
+            dto.monteurNamen = project.getMonteurs().stream()
+                    .map(Gebruiker::getGebruikersnaam)
+                    .toList();
+        }
+
         if (project.getOnderdelen() != null) {
             dto.onderdelen = project.getOnderdelen().stream()
                     .map(onderdeel -> {
-                        OnderdeelResponseDTO onderdeelResponseDTO = new OnderdeelResponseDTO();
-                        onderdeelResponseDTO.onderdeelnaam = onderdeel.getOnderdeelnaam();
-                        onderdeelResponseDTO.artikelnummer = onderdeel.getArtikelnummer();
-                        onderdeelResponseDTO.prijs = onderdeel.getPrijs();
-                        onderdeelResponseDTO.bestelstatus = onderdeel.getBestelstatus();
-                        onderdeelResponseDTO.projectId = project.getId();
-                        return onderdeelResponseDTO;
+                        OnderdeelResponseDTO oDto = new OnderdeelResponseDTO();
+                        oDto.onderdeelnaam = onderdeel.getOnderdeelnaam();
+                        oDto.artikelnummer = onderdeel.getArtikelnummer();
+                        oDto.prijs = onderdeel.getPrijs();
+                        oDto.bestelstatus = onderdeel.getBestelstatus();
+                        oDto.projectId = project.getId();
+                        return oDto;
                     })
-                            .toList();
+                    .toList();
         }
         return dto;
     }

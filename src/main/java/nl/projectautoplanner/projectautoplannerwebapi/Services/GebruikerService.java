@@ -2,8 +2,8 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class GebruikerService {
@@ -18,8 +18,16 @@ public class GebruikerService {
         return gebruikerRepository.save(gebruiker);
     }
 
-    public void deleteGebruiker(Long id) {
-        gebruikerRepository.deleteById(id);
+    public void deleteGebruiker(Long id, Jwt jwt) {
+        String ingelogdeNaam = jwt.getClaimAsString("preferred_username");
+        Gebruiker teVerwijderen = gebruikerRepository.findById(id).orElseThrow();
+        boolean isAdmin = jwt.getClaimAsMap("resource_access")
+                .get("ProjectautoPlanner").toString().contains("ADMIN");
+        if (isAdmin || teVerwijderen.getGebruikersnaam().equalsIgnoreCase(ingelogdeNaam)) {
+            gebruikerRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Je mag alleen je eigen account verwijderen!");
+        }
     }
 
     public Gebruiker updateGebruiker(Long id, Gebruiker nieuweData) {

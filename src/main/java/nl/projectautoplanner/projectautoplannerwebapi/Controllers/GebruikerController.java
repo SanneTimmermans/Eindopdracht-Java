@@ -56,8 +56,8 @@ public class GebruikerController {
         return ResponseEntity.ok(convertToDTO(updated));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGebruiker(@PathVariable Long id) {
-        gebruikerService.deleteGebruiker(id);
+    public ResponseEntity<Void> deleteGebruiker(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        gebruikerService.deleteGebruiker(id, jwt);
         return ResponseEntity.noContent().build();
     }
     @PatchMapping("/{gebruikersnaam}/rol")

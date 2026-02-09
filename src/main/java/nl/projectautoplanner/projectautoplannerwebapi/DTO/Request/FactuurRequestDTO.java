@@ -1,4 +1,5 @@
 package nl.projectautoplanner.projectautoplannerwebapi.DTO.Request;
 
-public class LoginRequestDTO {
+public class FactuurRequestDTO {
+    public Long projectId;
 }
