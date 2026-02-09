@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.LogboekRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.LogboekResponseDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Logboek;
@@ -19,7 +20,7 @@ public class LogboekController {
         this.logboekService = logboekService;
     }
     @PostMapping
-    public ResponseEntity<LogboekResponseDTO> createLogboek(@RequestBody LogboekRequestDTO requestDTO) {
+    public ResponseEntity<LogboekResponseDTO> createLogboek(@Valid @RequestBody LogboekRequestDTO requestDTO) {
         Logboek savedLogboek = logboekService.saveLogboek(
                 requestDTO.beschrijving,
                 requestDTO.uren,

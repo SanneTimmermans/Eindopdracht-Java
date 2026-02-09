@@ -2,6 +2,7 @@ package nl.projectautoplanner.projectautoplannerwebapi.DomainModels;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,6 +14,18 @@ public class Project {
     private String projectnaam;
     private String merk;
     private String model;
+
+    @ManyToOne
+    @JoinColumn(name = "eigenaar_id", nullable = false)
+    private Gebruiker eigenaar;
+
+    @ManyToMany
+    @JoinTable(
+            name = "project_monteurs",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "monteur_id")
+    )
+    private List<Gebruiker> monteurs = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Onderdeel> onderdelen;
@@ -91,5 +104,21 @@ public class Project {
 
     public void setFactuur(Factuur factuur) {
         this.factuur = factuur;
+    }
+
+    public Gebruiker getEigenaar() {
+        return eigenaar;
+    }
+
+    public void setEigenaar(Gebruiker eigenaar) {
+        this.eigenaar = eigenaar;
+    }
+
+    public List<Gebruiker> getMonteurs() {
+        return monteurs;
+    }
+
+    public void setMonteurs(List<Gebruiker> monteurs) {
+        this.monteurs = monteurs;
     }
 }

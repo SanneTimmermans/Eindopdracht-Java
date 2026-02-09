@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.core.convert.converter.Converter;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,24 +31,40 @@ public class SecurityConfig {
         http
                 .httpBasic(hp -> hp.disable())
                 .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults()) //NOG DEFAULT MAKEN
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/**").authenticated() //nog get bij facturen
                         .requestMatchers(HttpMethod.POST, "/gebruikers").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/gebruikers/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/gebruikers/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN") //nog maken
-                        .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").hasAnyRole("MONTEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").authenticated()
+
+                        .requestMatchers(HttpMethod.GET, "/projecten/{projectId}").hasAnyRole("MONTEUR", "EIGENAAR")
                         .requestMatchers(HttpMethod.POST, "/projecten/**").hasRole("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/projecten/**").hasAnyRole("MONTEUR", "ADMIN")
+
                         .requestMatchers(HttpMethod.POST, "/onderdelen/**").hasRole("MONTEUR")
                         .requestMatchers(HttpMethod.DELETE, "/onderdelen/**").hasRole("MONTEUR")
                         .requestMatchers(HttpMethod.PUT, "/onderdelen/**").hasRole("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/onderdelen/**").hasAnyRole("MONTEUR", "EIGENAAR")
+
                         .requestMatchers(HttpMethod.POST, "/logboeken/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.POST, "/facturen/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.POST, "/documentatie/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasRole("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/logboeken/**").hasAnyRole("MONTEUR", "EIGENAAR")
+
+                        .requestMatchers(HttpMethod.GET, "/facturen/{projectId}").hasAnyRole("EIGENAAR", "MONTEUR")
+                        .requestMatchers(HttpMethod.POST, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/documentatie/upload").hasRole("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/download/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/project/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasAnyRole("ADMIN", "MONTEUR")
+
+                        .requestMatchers(HttpMethod.GET, "/**").authenticated()
                         .anyRequest().denyAll())
         .oauth2ResourceServer(oauth -> oauth
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

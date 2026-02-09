@@ -7,5 +7,7 @@ public class ProjectResponseDTO {
     public String projectnaam;
     public String merk;
     public String model;
+    public String eigenaarNaam;
+    public List<String> monteurNamen;
     public List<OnderdeelResponseDTO> onderdelen;
 }
