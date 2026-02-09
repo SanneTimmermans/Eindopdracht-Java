@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface GebruikerRepository extends JpaRepository<Gebruiker, Long> {
-    Optional<Gebruiker> findByGebruikersnaam(String gebruikersnaam);
+    Optional<Gebruiker> findByGebruikersnaamIgnoreCase(String gebruikersnaam);
 }

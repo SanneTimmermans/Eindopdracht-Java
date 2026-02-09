@@ -2,7 +2,6 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,15 +12,6 @@ public class GebruikerService {
 
     public GebruikerService(GebruikerRepository gebruikerRepository) {
         this.gebruikerRepository = gebruikerRepository;
-    }
-
-    public List<Gebruiker> getAllGebruikers() {
-        return gebruikerRepository.findAll();
-    }
-
-    public Gebruiker getGebruikerById(Long id) {
-        return gebruikerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden"));
     }
 
     public Gebruiker saveGebruiker(Gebruiker gebruiker) {
@@ -41,5 +31,16 @@ public class GebruikerService {
             bestaandeGebruiker.setAdres(nieuweData.getAdres());
             return gebruikerRepository.save(bestaandeGebruiker);
         }).orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden"));
+    }
+    public Gebruiker getGebruikerByGebruikersnaam(String gebruikersnaam) {
+        return gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
+                .orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden."));
+    }
+
+    public Gebruiker updateRolByGebruikersnaam(String gebruikersnaam, Gebruiker.GebruikerRol rolEnum) {
+        Gebruiker gebruiker = gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
+                .orElseThrow(() -> new RuntimeException("Gebruiker met naam " + gebruikersnaam + " niet gevonden"));
+        gebruiker.setRol(rolEnum);
+        return gebruikerRepository.save(gebruiker);
     }
 }

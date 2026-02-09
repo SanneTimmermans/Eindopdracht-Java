@@ -37,10 +37,11 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/gebruikers/me").authenticated()
                         .requestMatchers(HttpMethod.GET, "/**").authenticated() //nog get bij facturen
                         .requestMatchers(HttpMethod.POST, "/gebruikers").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/gebruikers/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN") //nog maken
+                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").hasAnyRole("MONTEUR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/projecten/**").hasRole("MONTEUR")
                         .requestMatchers(HttpMethod.POST, "/onderdelen/**").hasRole("MONTEUR")

@@ -9,5 +9,6 @@ public class GebruikerResponseDTO {
     public String achternaam;
     public String email;
     public String telefoon;
+    public String adres;
     public Gebruiker.GebruikerRol rol;
 }
