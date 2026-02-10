@@ -3,6 +3,8 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.BadRequestException;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,11 +29,11 @@ public class ProjectService {
         project.setModel(dto.model);
 
         Gebruiker eigenaar = gebruikerRepository.findById(dto.eigenaarId)
-                .orElseThrow(() -> new RuntimeException("Eigenaar niet gevonden"));
+                .orElseThrow(() -> new RecordNotFoundException("Eigenaar niet gevonden"));
         project.setEigenaar(eigenaar);
 
         if (dto.monteurIds == null || dto.monteurIds.isEmpty()) {
-            throw new RuntimeException("Een project moet minimaal één monteur hebben.");
+            throw new BadRequestException("Een project moet minimaal één monteur hebben.");
         }
 
         List<Gebruiker> monteurs = gebruikerRepository.findAllById(dto.monteurIds);
@@ -41,12 +43,16 @@ public class ProjectService {
     }
 
     public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+        List<Project> projecten = projectRepository.findAll();
+        if (projecten.isEmpty()) {
+            throw new RecordNotFoundException("Er zijn momenteel geen projecten geregistreerd.");
+        }
+        return projecten;
     }
 
     public Project getProjectGevalideerd(Long projectId, Jwt jwt) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project niet gevonden"));
+                .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
 
         String username = jwt.getClaimAsString("preferred_username");
         String roles = jwt.getClaimAsMap("resource_access").get("ProjectautoPlanner").toString();
@@ -59,7 +65,7 @@ public class ProjectService {
         if (isAdmin || isToegewezenMonteur || isEigenaar) {
             return project;
         } else {
-            throw new RuntimeException("Toegang geweigerd: Je bent niet gemachtigd voor dit project.");
+            throw new BadRequestException("Toegang geweigerd: Je bent niet gemachtigd voor dit project.");
         }
     }
 
