@@ -45,10 +45,15 @@ public class DocumentatieService {
             Path targetLocation = storageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             if (projectId != null) {
-                doc.setProject(projectRepository.findById(projectId).orElseThrow(() -> new RecordNotFoundException("Project niet gevonden")));
+                Project project = projectRepository.findById(projectId)
+                        .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
+                doc.setProject(project);
+                project.getDocumentatieLijst().add(doc);
             }
             if (onderdeelId != null) {
-                doc.setOnderdeel(onderdeelRepository.findById(onderdeelId).orElseThrow(() -> new RecordNotFoundException("Onderdeel niet gevonden")));
+                Onderdeel onderdeel = onderdeelRepository.findById(onderdeelId)
+                        .orElseThrow(() -> new RecordNotFoundException("Onderdeel niet gevonden"));
+                doc.setOnderdeel(onderdeel);
             }
 
             return documentatieRepository.save(doc);

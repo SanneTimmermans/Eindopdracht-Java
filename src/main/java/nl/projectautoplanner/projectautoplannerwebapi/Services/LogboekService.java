@@ -39,6 +39,7 @@ public class LogboekService {
                 .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden met id: " + projectId));
         logboek.setMonteur(monteur);
         logboek.setProject(project);
+        project.getLogboeken().add(logboek);
         return logboekRepository.save(logboek);
     }
 

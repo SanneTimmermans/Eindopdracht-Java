@@ -20,7 +20,7 @@ public class OnderdeelService {
     }
 
     public List<Onderdeel> getAllOnderdelen(Long projectId) {
-        return onderdeelRepository.findAll();
+        return onderdeelRepository.findByProject_Id(projectId);
     }
 
     public Onderdeel saveOnderdeel(String onderdeelnaam, String artikelnummer, double prijs, Onderdeel.Bestelstatus bestelstatus, long projectId) {
@@ -32,6 +32,7 @@ public class OnderdeelService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden met id: " + projectId));
         onderdeel.setProject(project);
+        project.getOnderdelen().add(onderdeel);
         return onderdeelRepository.save(onderdeel);
     }
 
