@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,6 +43,15 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         Project project = projectService.getProjectGevalideerd(id, jwt);
         return ResponseEntity.ok(convertToDTO(project));
+    }
+    @GetMapping("/{Id}")
+    public ResponseEntity<List<ProjectResponseDTO>> getProjectenByEigenaar(@PathVariable Long id) {
+        List<Project> projecten = projectService.getProjectenVanKlant(id);
+        List<ProjectResponseDTO> response = new ArrayList<>();
+        for (Project project : projecten) {
+            response.add(convertToDTO(project));
+        }
+        return ResponseEntity.ok(response);
     }
     private ProjectResponseDTO convertToDTO(Project project) {
         ProjectResponseDTO dto = new ProjectResponseDTO();

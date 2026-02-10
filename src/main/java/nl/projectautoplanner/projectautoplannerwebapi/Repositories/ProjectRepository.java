@@ -7,4 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
+    List<Project> findByEigenaar_Id(Long eigenaarId);
 }

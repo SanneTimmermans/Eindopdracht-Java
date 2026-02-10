@@ -68,5 +68,8 @@ public class ProjectService {
             throw new BadRequestException("Toegang geweigerd: Je bent niet gemachtigd voor dit project.");
         }
     }
+    public List<Project> getProjectenVanKlant(Long klantId) {
+        return projectRepository.findByEigenaar_Id(klantId);
+    }
 
 }

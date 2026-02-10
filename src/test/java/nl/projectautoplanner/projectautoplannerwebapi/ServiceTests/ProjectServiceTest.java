@@ -190,5 +190,21 @@ class ProjectServiceTest {
         when(projectRepository.findAll()).thenReturn(List.of());
         assertThrows(RecordNotFoundException.class, () -> projectService.getAllProjects());
     }
+
+    @Test
+    void testGetProjectenVanKlant() {
+        Long id = 1L;
+        Project p1 = new Project();
+        p1.setProjectnaam("Project 1");
+        Project p2 = new Project();
+        p2.setProjectnaam("Project 2");
+
+        when(projectRepository.findByEigenaar_Id(id)).thenReturn(List.of(p1, p2));
+        List<Project> resultaat = projectService.getProjectenVanKlant(id);
+
+        assertEquals(2, resultaat.size());
+        assertEquals("Project 1", resultaat.get(0).getProjectnaam());
+        verify(projectRepository, times(1)).findByEigenaar_Id(id);
+    }
 }
 
