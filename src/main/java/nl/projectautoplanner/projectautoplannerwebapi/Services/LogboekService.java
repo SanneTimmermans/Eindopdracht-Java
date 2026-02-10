@@ -3,6 +3,7 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Logboek;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.LogboekRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectRepository;
@@ -33,16 +34,14 @@ public class LogboekService {
         logboek.setUren(uren);
         logboek.setDatumTijd(LocalDateTime.now());
         Gebruiker monteur = gebruikerRepository.findById(monteurId)
-                .orElseThrow(() -> new RuntimeException("Monteur niet gevonden met id: " + monteurId));
+                .orElseThrow(() -> new RecordNotFoundException("Monteur niet gevonden met id: " + monteurId));
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project niet gevonden met id: " + projectId));
+                .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden met id: " + projectId));
         logboek.setMonteur(monteur);
         logboek.setProject(project);
         return logboekRepository.save(logboek);
     }
-    public List<Logboek> getAllLogboekRegels() {
-        return logboekRepository.findAll();
-    }
+
     public List<Logboek> getRegelsByProjectId(Long projectId) {
         return logboekRepository.findByProject_Id(projectId);
     }

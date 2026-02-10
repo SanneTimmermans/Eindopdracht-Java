@@ -2,6 +2,7 @@ package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class OnderdeelService {
         onderdeel.setPrijs(prijs);
         onderdeel.setBestelstatus(bestelstatus);
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project niet gevonden met id: " + projectId));
+                .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden met id: " + projectId));
         onderdeel.setProject(project);
         return onderdeelRepository.save(onderdeel);
     }
@@ -45,6 +46,6 @@ public class OnderdeelService {
             bestaandOnderdeel.setPrijs(nieuwOnderdeel.getPrijs());
             bestaandOnderdeel.setBestelstatus(nieuwOnderdeel.getBestelstatus());
             return onderdeelRepository.save(bestaandOnderdeel);
-        }).orElseThrow(() -> new RuntimeException("Onderdeel niet gevonden."));
+        }).orElseThrow(() -> new RecordNotFoundException("Onderdeel niet gevonden."));
     }
 }

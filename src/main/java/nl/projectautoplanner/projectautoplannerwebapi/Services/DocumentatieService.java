@@ -1,5 +1,7 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.BadRequestException;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import org.springframework.core.io.Resource;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Documentatie;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
@@ -30,7 +32,7 @@ public class DocumentatieService {
         this.documentatieRepository = documentatieRepository;
         this.projectRepository = projectRepository;
         this.onderdeelRepository = onderdeelRepository;
-        try { Files.createDirectories(storageLocation); } catch (Exception e) { throw new RuntimeException("Map aanmaken mislukt"); }
+        try { Files.createDirectories(storageLocation); } catch (Exception e) { throw new BadRequestException("Map aanmaken mislukt"); }
     }
     public Documentatie storeDocument(MultipartFile file, String tekst, Long projectId, Long onderdeelId) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -43,15 +45,15 @@ public class DocumentatieService {
             Path targetLocation = storageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             if (projectId != null) {
-                doc.setProject(projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project niet gevonden")));
+                doc.setProject(projectRepository.findById(projectId).orElseThrow(() -> new RecordNotFoundException("Project niet gevonden")));
             }
             if (onderdeelId != null) {
-                doc.setOnderdeel(onderdeelRepository.findById(onderdeelId).orElseThrow(() -> new RuntimeException("Onderdeel niet gevonden")));
+                doc.setOnderdeel(onderdeelRepository.findById(onderdeelId).orElseThrow(() -> new RecordNotFoundException("Onderdeel niet gevonden")));
             }
 
             return documentatieRepository.save(doc);
         } catch (IOException ex) {
-            throw new RuntimeException("Kon bestand niet opslaan", ex);
+            throw new BadRequestException("Kon bestand niet opslaan", ex);
         }
     }
     public Resource loadFile(String fileName) {
@@ -59,8 +61,8 @@ public class DocumentatieService {
             Path filePath = storageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) return resource;
-            else throw new RuntimeException("Bestand niet gevonden");
-        } catch (Exception e) { throw new RuntimeException("Bestand niet gevonden", e); }
+            else throw new RecordNotFoundException("Bestand niet gevonden");
+        } catch (Exception e) { throw new RecordNotFoundException("Bestand niet gevonden", e); }
     }
 
     public List<Documentatie> getDocumentatieByProject(Long projectId) {
@@ -69,7 +71,7 @@ public class DocumentatieService {
 
     public void deleteDocumentatie(Long id) {
         if (!documentatieRepository.existsById(id)) {
-            throw new RuntimeException("Documentatie met id " + id + " niet gevonden.");
+            throw new RecordNotFoundException("Documentatie met id " + id + " niet gevonden.");
         }
         documentatieRepository.deleteById(id);
     }
