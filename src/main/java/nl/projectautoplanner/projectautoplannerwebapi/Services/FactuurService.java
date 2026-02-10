@@ -4,6 +4,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.FactuurRequest
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Factuur;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.FactuurRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.LogboekRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
@@ -31,7 +32,7 @@ public class FactuurService {
     }
     public Factuur genereerFactuur(FactuurRequestDTO dto) {
         Project project = projectRepository.findById(dto.projectId)
-                .orElseThrow(() -> new RuntimeException("Project niet gevonden"));
+                .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
         double uurtarief = 75.0;
         double urenKosten = logboekRepository.findByProject_Id(dto.projectId).stream()
                 .mapToDouble(log -> log.getUren() * uurtarief)
@@ -49,10 +50,14 @@ public class FactuurService {
     }
     public Factuur getFactuurByProject_Id(Long projectId) {
         return factuurRepository.findByProject_Id(projectId)
-                .orElseThrow(() -> new RuntimeException("Factuur met id " + projectId + " niet gevonden"));
+                .orElseThrow(() -> new RecordNotFoundException("Factuur met id " + projectId + " niet gevonden"));
     }
 
     public List<Factuur> getAllFacturen() {
-        return factuurRepository.findAll();
+        List<Factuur> facturen = factuurRepository.findAll();
+        if (facturen.isEmpty()) {
+            throw new RecordNotFoundException("Er zijn momenteel geen facturen aanwezig in het systeem.");
+        }
+        return facturen;
     }
 }
