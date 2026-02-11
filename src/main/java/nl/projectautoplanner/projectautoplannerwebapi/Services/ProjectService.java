@@ -10,6 +10,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectReposi
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProjectService {
@@ -68,8 +69,18 @@ public class ProjectService {
             throw new BadRequestException("Toegang geweigerd: Je bent niet gemachtigd voor dit project.");
         }
     }
-    public List<Project> getProjectenVanKlant(Long klantId) {
-        return projectRepository.findByEigenaar_Id(klantId);
+    public List<Project> getProjectenVanKlant(Long id, Jwt jwt) {
+        String username = jwt.getClaimAsString("preferred_username");
+        Map<String, Object> resourceAccess = jwt.getClaimAsMap("resource_access");
+        String roles = resourceAccess.get("ProjectautoPlanner").toString();
+        boolean isMonteur = roles.contains("MONTEUR");
+        Gebruiker gezochteEigenaar = gebruikerRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("Eigenaar niet gevonden"));
+        boolean isZelfEigenaar = gezochteEigenaar.getGebruikersnaam().equalsIgnoreCase(username);
+        if (isMonteur || isZelfEigenaar) {
+            return projectRepository.findByEigenaar_Id(id);
+        } else {
+            throw new BadRequestException("Toegang geweigerd: Je mag de projecten van deze gebruiker niet inzien.");
+        }
     }
-
 }

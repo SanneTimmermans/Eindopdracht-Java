@@ -44,9 +44,9 @@ public class ProjectController {
         Project project = projectService.getProjectGevalideerd(id, jwt);
         return ResponseEntity.ok(convertToDTO(project));
     }
-    @GetMapping("/{Id}")
-    public ResponseEntity<List<ProjectResponseDTO>> getProjectenByEigenaar(@PathVariable Long id) {
-        List<Project> projecten = projectService.getProjectenVanKlant(id);
+    @GetMapping("/eigenaar/{Id}")
+    public ResponseEntity<List<ProjectResponseDTO>> getProjectenByEigenaar(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        List<Project> projecten = projectService.getProjectenVanKlant(id, jwt);
         List<ProjectResponseDTO> response = new ArrayList<>();
         for (Project project : projecten) {
             response.add(convertToDTO(project));

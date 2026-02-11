@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/projecten/{projectId}").hasAnyRole("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.GET, "/projecten/eigenaar/**").hasAnyRole("MONTEUR", "EIGENAAR")
                         .requestMatchers(HttpMethod.POST, "/projecten/**").hasRole("MONTEUR")
                         .requestMatchers(HttpMethod.GET, "/projecten/**").hasAnyRole("MONTEUR", "ADMIN")
 
