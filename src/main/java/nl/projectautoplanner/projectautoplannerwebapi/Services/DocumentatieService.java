@@ -11,6 +11,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,7 @@ public class DocumentatieService {
         this.onderdeelRepository = onderdeelRepository;
         try { Files.createDirectories(storageLocation); } catch (Exception e) { throw new BadRequestException("Map aanmaken mislukt"); }
     }
+    @Transactional
     public Documentatie storeDocument(MultipartFile file, String tekst, Long projectId, Long onderdeelId) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Documentatie doc = new Documentatie();
@@ -61,6 +63,7 @@ public class DocumentatieService {
             throw new BadRequestException("Kon bestand niet opslaan", ex);
         }
     }
+    @Transactional
     public Resource loadFile(String fileName) {
         try {
             Path filePath = storageLocation.resolve(fileName).normalize();
@@ -69,11 +72,11 @@ public class DocumentatieService {
             else throw new RecordNotFoundException("Bestand niet gevonden");
         } catch (Exception e) { throw new RecordNotFoundException("Bestand niet gevonden", e); }
     }
-
+    @Transactional
     public List<Documentatie> getDocumentatieByProject(Long projectId) {
         return documentatieRepository.findByProject_Id(projectId);
     }
-
+    @Transactional
     public void deleteDocumentatie(Long id) {
         if (!documentatieRepository.existsById(id)) {
             throw new RecordNotFoundException("Documentatie met id " + id + " niet gevonden.");

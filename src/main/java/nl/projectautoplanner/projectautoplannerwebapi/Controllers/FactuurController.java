@@ -40,7 +40,7 @@ public class FactuurController {
         return ResponseEntity.ok(convertToDTO(factuur));
     }
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<FactuurResponseDTO> getFactuur(@PathVariable Long projectId) {
+    public ResponseEntity<FactuurResponseDTO> getFactuurByProject_Id(@PathVariable Long projectId) {
         Factuur factuur = factuurService.getFactuurByProject_Id(projectId);
         return ResponseEntity.ok(convertToDTO(factuur));
     }

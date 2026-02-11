@@ -51,6 +51,11 @@ public class GebruikerController {
         Gebruiker gebruiker = gebruikerService.getGebruikerByGebruikersnaam(gebruikersnaam);
         return ResponseEntity.ok(convertToDTO(gebruiker));
     }
+    @GetMapping("/{gebruikersnaam}")
+    public ResponseEntity<GebruikerResponseDTO> getGebruikerByName(@PathVariable String gebruikersnaam) {
+        Gebruiker gebruiker = gebruikerService.getGebruikerByGebruikersnaam(gebruikersnaam);
+        return ResponseEntity.ok(convertToDTO(gebruiker));
+    }
     @PutMapping("/{id}")
     public ResponseEntity<GebruikerResponseDTO> updateGebruiker(@PathVariable Long id, @Valid @RequestBody Gebruiker nieuweData) {
         Gebruiker updated = gebruikerService.updateGebruiker(id, nieuweData);

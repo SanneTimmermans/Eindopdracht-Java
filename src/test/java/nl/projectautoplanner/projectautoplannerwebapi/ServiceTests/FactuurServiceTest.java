@@ -80,7 +80,7 @@ class FactuurServiceTest {
     @Test
     @DisplayName("GetFactuurByProject_Id - Succesvol gevonden")
     void testGetFactuurByProjectIdSuccess() {
-        when(factuurRepository.findByProject_Id(1L)).thenReturn(Optional.of(new Factuur()));
+        when(factuurRepository.findByProjectId(1L)).thenReturn(Optional.of(new Factuur()));
         Factuur result = factuurService.getFactuurByProject_Id(1L);
         assertNotNull(result);
     }
@@ -88,7 +88,7 @@ class FactuurServiceTest {
     @Test
     @DisplayName("GetFactuurByProject_Id - Factuur niet gevonden")
     void testGetFactuurByProjectIdNotFound() {
-        when(factuurRepository.findByProject_Id(1L)).thenReturn(Optional.empty());
+        when(factuurRepository.findByProjectId(1L)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> factuurService.getFactuurByProject_Id(1L));
     }
 

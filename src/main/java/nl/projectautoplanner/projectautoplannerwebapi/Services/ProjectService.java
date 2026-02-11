@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
+import org.springframework.transaction.annotation.Transactional;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
@@ -22,7 +23,7 @@ public class ProjectService {
         this.projectRepository = projectRepository;
         this.gebruikerRepository = gebruikerRepository;
     }
-
+    @Transactional
     public Project createProject(ProjectRequestDTO dto) {
         Project project = new Project();
         project.setProjectnaam(dto.projectnaam);
@@ -42,7 +43,7 @@ public class ProjectService {
 
         return projectRepository.save(project);
     }
-
+    @Transactional
     public List<Project> getAllProjects() {
         List<Project> projecten = projectRepository.findAll();
         if (projecten.isEmpty()) {
@@ -50,7 +51,7 @@ public class ProjectService {
         }
         return projecten;
     }
-
+    @Transactional
     public Project getProjectGevalideerd(Long projectId, Jwt jwt) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
@@ -69,6 +70,7 @@ public class ProjectService {
             throw new BadRequestException("Toegang geweigerd: Je bent niet gemachtigd voor dit project.");
         }
     }
+    @Transactional
     public List<Project> getProjectenVanKlant(Long id, Jwt jwt) {
         String username = jwt.getClaimAsString("preferred_username");
         Map<String, Object> resourceAccess = jwt.getClaimAsMap("resource_access");

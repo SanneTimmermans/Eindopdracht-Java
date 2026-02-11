@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
@@ -39,12 +40,14 @@ public class ProjectController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         Project project = projectService.getProjectGevalideerd(id, jwt);
         return ResponseEntity.ok(convertToDTO(project));
     }
-    @GetMapping("/eigenaar/{Id}")
+
+    @GetMapping("/eigenaar_id/{id}")
     public ResponseEntity<List<ProjectResponseDTO>> getProjectenByEigenaar(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         List<Project> projecten = projectService.getProjectenVanKlant(id, jwt);
         List<ProjectResponseDTO> response = new ArrayList<>();
@@ -67,6 +70,7 @@ public class ProjectController {
         if (project.getMonteurs() != null) {
             dto.monteurNamen = project.getMonteurs().stream()
                     .map(Gebruiker::getGebruikersnaam)
+                    .distinct()
                     .toList();
         }
 
