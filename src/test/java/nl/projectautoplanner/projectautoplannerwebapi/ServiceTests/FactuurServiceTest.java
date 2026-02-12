@@ -78,6 +78,30 @@ class FactuurServiceTest {
     }
 
     @Test
+    @DisplayName("GenereerFactuur - Update bestaande factuur")
+    void testGenereerFactuurUpdateBestaande() {
+        FactuurRequestDTO dto = new FactuurRequestDTO();
+        dto.projectId = 1L;
+        Project mockProject = new Project();
+        mockProject.setId(1L);
+        Factuur bestaandeFactuur = new Factuur();
+        bestaandeFactuur.setId(50L);
+        bestaandeFactuur.setTotaalBedrag(10.0);
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(mockProject));
+        when(factuurRepository.findByProjectId(1L)).thenReturn(Optional.of(bestaandeFactuur));
+        when(logboekRepository.findByProject_Id(1L)).thenReturn(List.of());
+        when(onderdeelRepository.findByProject_Id(1L)).thenReturn(List.of());
+        when(factuurRepository.save(any(Factuur.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        Factuur result = factuurService.genereerFactuur(dto);
+        assertNotNull(result);
+        assertEquals(50L, result.getId(), "Het ID moet gelijk blijven aan de bestaande factuur");
+        verify(factuurRepository).findByProjectId(1L);
+        verify(factuurRepository).save(any(Factuur.class));
+    }
+
+    @Test
     @DisplayName("GetFactuurByProject_Id - Succesvol gevonden")
     void testGetFactuurByProjectIdSuccess() {
         when(factuurRepository.findByProjectId(1L)).thenReturn(Optional.of(new Factuur()));
