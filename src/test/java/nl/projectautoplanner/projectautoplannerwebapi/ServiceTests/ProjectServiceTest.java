@@ -190,5 +190,73 @@ class ProjectServiceTest {
         when(projectRepository.findAll()).thenReturn(List.of());
         assertThrows(RecordNotFoundException.class, () -> projectService.getAllProjects());
     }
+
+    @Test
+    @DisplayName("GetAllProjectsVanKlant - Als monteur")
+    void testGetProjectenVanKlantAlsMonteur() {
+        Long id = 1L;
+        Jwt jwt = mock(Jwt.class);
+
+        Map<String, Object> rolesMap = Map.of("roles", List.of("MONTEUR"));
+        Map<String, Object> resourceAccess = Map.of("ProjectautoPlanner", rolesMap);
+        when(jwt.getClaimAsMap("resource_access")).thenReturn(resourceAccess);
+        when(jwt.getClaimAsString("preferred_username")).thenReturn("monteur_henk");
+
+        Gebruiker eigenaar = new Gebruiker();
+        eigenaar.setGebruikersnaam("klant_klaas");
+        when(gebruikerRepository.findById(id)).thenReturn(Optional.of(eigenaar));
+
+        Project p1 = new Project();
+        p1.setProjectnaam("Motor Revisie");
+        p1.setMerk("Porsche");
+
+        when(projectRepository.findByEigenaar_Id(id)).thenReturn(List.of(p1));
+        List<Project> resultaat = projectService.getProjectenVanKlant(id, jwt);
+        assertEquals(1, resultaat.size());
+        assertEquals("Motor Revisie", resultaat.get(0).getProjectnaam());
+        assertEquals("Porsche", resultaat.get(0).getMerk());
+    }
+    @Test
+    @DisplayName("GetAllProjectsVanKlant - Als eigenaar")
+    void testGetProjectenVanKlant() {
+        Long id = 10L;
+        String klantNaam = "klant_klaas";
+        Jwt jwt = mock(Jwt.class);
+
+        Map<String, Object> rolesMap = Map.of("roles", List.of("EIGENAAR"));
+        Map<String, Object> resourceAccess = Map.of("ProjectautoPlanner", rolesMap);
+        when(jwt.getClaimAsMap("resource_access")).thenReturn(resourceAccess);
+        when(jwt.getClaimAsString("preferred_username")).thenReturn(klantNaam);
+        Gebruiker eigenaarInDb = new Gebruiker();
+        eigenaarInDb.setGebruikersnaam(klantNaam);
+        when(gebruikerRepository.findById(id)).thenReturn(Optional.of(eigenaarInDb));
+
+        Project p1 = new Project();
+        p1.setProjectnaam("Jaarlijkse APK");
+        p1.setMerk("Volkswagen");
+
+        when(projectRepository.findByEigenaar_Id(id)).thenReturn(List.of(p1));
+        List<Project> resultaat = projectService.getProjectenVanKlant(id, jwt);
+        assertEquals("Jaarlijkse APK", resultaat.get(0).getProjectnaam());
+        verify(projectRepository).findByEigenaar_Id(id);
+    }
+    @Test
+    @DisplayName("GetAllProjectsVanKlant - Toegang geweigerd")
+    void testGetProjectenVanKlantGeweigerd() {
+        Long id = 99L;
+        Jwt jwt = mock(Jwt.class);
+        Map<String, Object> rolesMap = Map.of("roles", List.of("EIGENAAR"));
+        Map<String, Object> resourceAccess = Map.of("ProjectautoPlanner", rolesMap);
+        when(jwt.getClaimAsMap("resource_access")).thenReturn(resourceAccess);
+        when(jwt.getClaimAsString("preferred_username")).thenReturn("stoute_gebruiker");
+
+        Gebruiker echteEigenaar = new Gebruiker();
+        echteEigenaar.setGebruikersnaam("onwetende_klant");
+        when(gebruikerRepository.findById(id)).thenReturn(Optional.of(echteEigenaar));
+        BadRequestException exception = assertThrows(BadRequestException.class, () ->
+                projectService.getProjectenVanKlant(id, jwt)
+        );
+        assertEquals("Toegang geweigerd: Je mag de projecten van deze gebruiker niet inzien.", exception.getMessage());
+    }
 }
 

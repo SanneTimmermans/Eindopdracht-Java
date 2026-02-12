@@ -35,34 +35,36 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/gebruikers").permitAll()
+                        .requestMatchers("/login").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/gebruikers/{gebruikersnaam}").hasAnyAuthority("ADMIN", "MONTEUR")
                         .requestMatchers(HttpMethod.GET, "/gebruikers/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/gebruikers/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/gebruikers/*/rol").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/gebruikers/**").authenticated()
 
-                        .requestMatchers(HttpMethod.GET, "/projecten/{projectId}").hasAnyRole("MONTEUR", "EIGENAAR")
-                        .requestMatchers(HttpMethod.POST, "/projecten/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.GET, "/projecten/**").hasAnyRole("MONTEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/projecten/{projectId}").hasAnyAuthority("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.GET, "/projecten/eigenaar_id/**").hasAnyAuthority("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.POST, "/projecten/**").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/projecten/**").hasAnyAuthority("MONTEUR", "ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/onderdelen/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.DELETE, "/onderdelen/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.PUT, "/onderdelen/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.GET, "/onderdelen/**").hasAnyRole("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.POST, "/onderdelen/**").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.DELETE, "/onderdelen/**").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.PUT, "/onderdelen/**").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/onderdelen/**").hasAnyAuthority("MONTEUR", "EIGENAAR")
 
-                        .requestMatchers(HttpMethod.POST, "/logboeken/**").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.GET, "/logboeken/**").hasAnyRole("MONTEUR", "EIGENAAR")
+                        .requestMatchers(HttpMethod.POST, "/logboeken/**").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/logboeken/**").hasAnyAuthority("MONTEUR", "EIGENAAR")
 
-                        .requestMatchers(HttpMethod.GET, "/facturen/{projectId}").hasAnyRole("EIGENAAR", "MONTEUR")
-                        .requestMatchers(HttpMethod.POST, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/facturen/**").hasAnyRole("MONTEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/facturen/{projectId}").hasAnyAuthority("EIGENAAR", "MONTEUR")
+                        .requestMatchers(HttpMethod.POST, "/facturen/**").hasAnyAuthority("MONTEUR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/facturen/**").hasAnyAuthority("MONTEUR", "ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/documentatie/upload").hasRole("MONTEUR")
-                        .requestMatchers(HttpMethod.GET, "/documentatie/download/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/documentatie/project/**").hasAnyRole("MONTEUR", "EIGENAAR", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasAnyRole("ADMIN", "MONTEUR")
+                        .requestMatchers(HttpMethod.POST, "/documentatie/upload").hasAuthority("MONTEUR")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/download/**").hasAnyAuthority("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/documentatie/project/**").hasAnyAuthority("MONTEUR", "EIGENAAR", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/documentatie/**").hasAnyAuthority("ADMIN", "MONTEUR")
 
                         .requestMatchers(HttpMethod.GET, "/**").authenticated()
                         .anyRequest().denyAll())
@@ -77,7 +79,7 @@ public class SecurityConfig {
             public Collection<GrantedAuthority> convert(Jwt source) {
                 Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
                 for (String authority : getAuthorities(source)) {
-                    grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + authority));
+                    grantedAuthorities.add(new SimpleGrantedAuthority(authority));
                 }
                 return grantedAuthorities;
             }

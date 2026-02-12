@@ -1,5 +1,6 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Controllers;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.Request.ProjectRequestDTO;
 import nl.projectautoplanner.projectautoplannerwebapi.DTO.response.OnderdeelResponseDTO;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,10 +40,21 @@ public class ProjectController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         Project project = projectService.getProjectGevalideerd(id, jwt);
         return ResponseEntity.ok(convertToDTO(project));
+    }
+
+    @GetMapping("/eigenaar_id/{id}")
+    public ResponseEntity<List<ProjectResponseDTO>> getProjectenByEigenaar(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        List<Project> projecten = projectService.getProjectenVanKlant(id, jwt);
+        List<ProjectResponseDTO> response = new ArrayList<>();
+        for (Project project : projecten) {
+            response.add(convertToDTO(project));
+        }
+        return ResponseEntity.ok(response);
     }
     private ProjectResponseDTO convertToDTO(Project project) {
         ProjectResponseDTO dto = new ProjectResponseDTO();
@@ -56,6 +70,7 @@ public class ProjectController {
         if (project.getMonteurs() != null) {
             dto.monteurNamen = project.getMonteurs().stream()
                     .map(Gebruiker::getGebruikersnaam)
+                    .distinct()
                     .toList();
         }
 

@@ -10,9 +10,11 @@ import nl.projectautoplanner.projectautoplannerwebapi.Repositories.LogboekReposi
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FactuurService {
@@ -30,9 +32,11 @@ public class FactuurService {
         this.logboekRepository = logboekRepository;
         this.onderdeelRepository = onderdeelRepository;
     }
+    @Transactional
     public Factuur genereerFactuur(FactuurRequestDTO dto) {
         Project project = projectRepository.findById(dto.projectId)
                 .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
+        Optional<Factuur> bestaandeFactuur = factuurRepository.findByProjectId(dto.projectId);
         double uurtarief = 75.0;
         double urenKosten = logboekRepository.findByProject_Id(dto.projectId).stream()
                 .mapToDouble(log -> log.getUren() * uurtarief)
@@ -40,19 +44,25 @@ public class FactuurService {
         double onderdelenKosten = onderdeelRepository.findByProject_Id(dto.projectId).stream()
                 .mapToDouble(Onderdeel::getPrijs)
                 .sum();
-        Factuur factuur = new Factuur();
-        factuur.setProject(project);
+        Factuur factuur;
+        if (bestaandeFactuur.isPresent()) {
+            factuur = bestaandeFactuur.get();
+        } else {
+            factuur = new Factuur();
+            factuur.setProject(project);
+        }
         factuur.setFactuurDatum(LocalDate.now());
         factuur.setTotaalBedrag(urenKosten + onderdelenKosten);
         factuur.setBetaald(false);
 
         return factuurRepository.save(factuur);
     }
+    @Transactional
     public Factuur getFactuurByProject_Id(Long projectId) {
-        return factuurRepository.findByProject_Id(projectId)
-                .orElseThrow(() -> new RecordNotFoundException("Factuur met id " + projectId + " niet gevonden"));
+        return factuurRepository.findByProjectId(projectId)
+                .orElseThrow(() -> new RecordNotFoundException("Geen factuur gevonden voor project: " + projectId));
     }
-
+    @Transactional
     public List<Factuur> getAllFacturen() {
         List<Factuur> facturen = factuurRepository.findAll();
         if (facturen.isEmpty()) {

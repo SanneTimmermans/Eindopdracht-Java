@@ -7,5 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface FactuurRepository extends JpaRepository<Factuur, Long> {
-    Optional<Factuur> findByProject_Id(Long projectId);
+    Optional<Factuur> findByProjectId(Long projectId);
+
 }

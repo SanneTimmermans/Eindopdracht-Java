@@ -58,17 +58,14 @@ public class OnderdeelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OnderdeelResponseDTO> updateOnderdeel(@PathVariable Long id, @Valid @RequestBody Onderdeel onderdeel) {
-        Onderdeel updated = onderdeelService.updateOnderdeel(id, onderdeel);
-        OnderdeelResponseDTO dto = new OnderdeelResponseDTO();
-        dto.onderdeelnaam = updated.getOnderdeelnaam();
-        dto.artikelnummer = updated.getArtikelnummer();
-        dto.prijs = updated.getPrijs();
-        dto.bestelstatus = updated.getBestelstatus();
-
-        if (updated.getProject() != null) {
-            dto.projectId = updated.getProject().getId();
-        }
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<OnderdeelResponseDTO> updateOnderdeel(@PathVariable Long id, @Valid @RequestBody OnderdeelRequestDTO dto) {
+        Onderdeel updated = onderdeelService.updateOnderdeel(
+                id,
+                dto.onderdeelnaam,
+                dto.artikelnummer,
+                dto.prijs,
+                dto.bestelstatus
+        );
+        return ResponseEntity.ok(convertToDTO(updated));
     }
 }

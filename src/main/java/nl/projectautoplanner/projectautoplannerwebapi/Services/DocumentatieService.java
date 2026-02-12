@@ -1,5 +1,7 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.BadRequestException;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import org.springframework.core.io.Resource;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Documentatie;
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Project;
@@ -9,6 +11,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Onderdeel;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.OnderdeelRepository;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,8 +33,9 @@ public class DocumentatieService {
         this.documentatieRepository = documentatieRepository;
         this.projectRepository = projectRepository;
         this.onderdeelRepository = onderdeelRepository;
-        try { Files.createDirectories(storageLocation); } catch (Exception e) { throw new RuntimeException("Map aanmaken mislukt"); }
+        try { Files.createDirectories(storageLocation); } catch (Exception e) { throw new BadRequestException("Map aanmaken mislukt"); }
     }
+    @Transactional
     public Documentatie storeDocument(MultipartFile file, String tekst, Long projectId, Long onderdeelId) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Documentatie doc = new Documentatie();
@@ -43,33 +47,39 @@ public class DocumentatieService {
             Path targetLocation = storageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             if (projectId != null) {
-                doc.setProject(projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project niet gevonden")));
+                Project project = projectRepository.findById(projectId)
+                        .orElseThrow(() -> new RecordNotFoundException("Project niet gevonden"));
+                doc.setProject(project);
+                project.getDocumentatieLijst().add(doc);
             }
             if (onderdeelId != null) {
-                doc.setOnderdeel(onderdeelRepository.findById(onderdeelId).orElseThrow(() -> new RuntimeException("Onderdeel niet gevonden")));
+                Onderdeel onderdeel = onderdeelRepository.findById(onderdeelId)
+                        .orElseThrow(() -> new RecordNotFoundException("Onderdeel niet gevonden"));
+                doc.setOnderdeel(onderdeel);
             }
 
             return documentatieRepository.save(doc);
         } catch (IOException ex) {
-            throw new RuntimeException("Kon bestand niet opslaan", ex);
+            throw new BadRequestException("Kon bestand niet opslaan", ex);
         }
     }
+    @Transactional
     public Resource loadFile(String fileName) {
         try {
             Path filePath = storageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) return resource;
-            else throw new RuntimeException("Bestand niet gevonden");
-        } catch (Exception e) { throw new RuntimeException("Bestand niet gevonden", e); }
+            else throw new RecordNotFoundException("Bestand niet gevonden");
+        } catch (Exception e) { throw new RecordNotFoundException("Bestand niet gevonden", e); }
     }
-
+    @Transactional
     public List<Documentatie> getDocumentatieByProject(Long projectId) {
         return documentatieRepository.findByProject_Id(projectId);
     }
-
+    @Transactional
     public void deleteDocumentatie(Long id) {
         if (!documentatieRepository.existsById(id)) {
-            throw new RuntimeException("Documentatie met id " + id + " niet gevonden.");
+            throw new RecordNotFoundException("Documentatie met id " + id + " niet gevonden.");
         }
         documentatieRepository.deleteById(id);
     }

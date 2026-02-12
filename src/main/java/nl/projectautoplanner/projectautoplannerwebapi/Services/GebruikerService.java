@@ -1,6 +1,8 @@
 package nl.projectautoplanner.projectautoplannerwebapi.Services;
 
 import nl.projectautoplanner.projectautoplannerwebapi.DomainModels.Gebruiker;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.BadRequestException;
+import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundException;
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class GebruikerService {
         if (isAdmin || teVerwijderen.getGebruikersnaam().equalsIgnoreCase(ingelogdeNaam)) {
             gebruikerRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Je mag alleen je eigen account verwijderen!");
+            throw new BadRequestException("Je mag alleen je eigen account verwijderen!");
         }
     }
 
@@ -38,16 +40,16 @@ public class GebruikerService {
             bestaandeGebruiker.setTelefoon(nieuweData.getTelefoon());
             bestaandeGebruiker.setAdres(nieuweData.getAdres());
             return gebruikerRepository.save(bestaandeGebruiker);
-        }).orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden"));
+        }).orElseThrow(() -> new RecordNotFoundException("Gebruiker niet gevonden"));
     }
     public Gebruiker getGebruikerByGebruikersnaam(String gebruikersnaam) {
         return gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
-                .orElseThrow(() -> new RuntimeException("Gebruiker niet gevonden."));
+                .orElseThrow(() -> new RecordNotFoundException("Gebruiker niet gevonden."));
     }
 
     public Gebruiker updateRolByGebruikersnaam(String gebruikersnaam, Gebruiker.GebruikerRol rolEnum) {
         Gebruiker gebruiker = gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
-                .orElseThrow(() -> new RuntimeException("Gebruiker met naam " + gebruikersnaam + " niet gevonden"));
+                .orElseThrow(() -> new RecordNotFoundException("Gebruiker met naam " + gebruikersnaam + " niet gevonden"));
         gebruiker.setRol(rolEnum);
         return gebruikerRepository.save(gebruiker);
     }

@@ -9,7 +9,6 @@ public class Gebruiker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String gebruikersnaam;
-    private String wachtwoord;
     private String voornaam;
     private String achternaam;
     private String email;
@@ -36,14 +35,6 @@ public class Gebruiker {
 
     public void setGebruikersnaam(String gebruikersnaam) {
         this.gebruikersnaam = gebruikersnaam;
-    }
-
-    public String getWachtwoord() {
-        return wachtwoord;
-    }
-
-    public void setWachtwoord(String wachtwoord) {
-        this.wachtwoord = wachtwoord;
     }
 
     public String getEmail() {

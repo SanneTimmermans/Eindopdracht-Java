@@ -30,11 +30,11 @@ public class DocumentatieController {
         return ResponseEntity.ok(convertToDTO(saved));
     }
 
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<Resource> download(@PathVariable String fileName) {
-        Resource resource = documentatieService.loadFile(fileName);
+    @GetMapping("/download/{bestandsnaam}")
+    public ResponseEntity<Resource> download(@PathVariable String bestandsnaam) {
+        Resource resource = documentatieService.loadFile(bestandsnaam);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; bestandsnaam=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
 
