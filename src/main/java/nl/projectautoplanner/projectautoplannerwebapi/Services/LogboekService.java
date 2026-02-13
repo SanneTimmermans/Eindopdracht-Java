@@ -10,6 +10,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.Repositories.ProjectReposi
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ public class LogboekService {
         this.gebruikerRepository = gebruikerRepository;
         this.projectRepository = projectRepository;
     }
+    @Transactional
     public Logboek saveLogboek(String beschrijving, double uren, Long monteurId, Long projectId) {
         Logboek logboek = new Logboek();
         logboek.setBeschrijving(beschrijving);
@@ -42,7 +44,7 @@ public class LogboekService {
         project.getLogboeken().add(logboek);
         return logboekRepository.save(logboek);
     }
-
+    @Transactional
     public List<Logboek> getRegelsByProjectId(Long projectId) {
         return logboekRepository.findByProject_Id(projectId);
     }

@@ -1,0 +1,810 @@
+{
+  "info": {
+    "_postman_id": "e5953052-47d1-44b4-bd49-fc560267f133",
+    "name": "ProjectautoPlanner",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52141044",
+    "_collection_link": "https://go.postman.co/collection/52141044-e5953052-47d1-44b4-bd49-fc560267f133?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Eigenaar functies",
+      "item": [
+        {
+          "name": "Gebruiker toevoegen",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"gebruikersnaam\": \"Jannie\",\r\n    \"voornaam\": \"Jan\",\r\n    \"achternaam\": \"Driessen\",\r\n    \"email\": \"jan@gmail.com\",\r\n    \"telefoon\": \"0612355578\",\r\n    \"adres\": \"Lindenlaan 5, Eindhoven\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/gebruikers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gebruiker verhuist",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"gebruikersnaam\": \"nieuwe_monteur_2026\",\r\n    \"voornaam\": \"Bas\",\r\n    \"achternaam\": \"Sleutel\",\r\n    \"email\": \"bas@autoplanner.nl\",\r\n    \"telefoon\": \"0612345678\",\r\n    \"adres\": \"Langelaan 5, Eindhoven\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/gebruikers/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Gebruiker acc verwijderen",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/gebruikers/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeellijst van project Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logboekregels inzien per project Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/logboeken/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "logboeken",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Document downloaden Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/documentatie/download/Porsche964TurboBadBoys_03.jpg",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "download",
+                "Porsche964TurboBadBoys_03.jpg"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Documenten inzien per project Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/documentatie/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Monteur functies (soms ook admin)",
+      "item": [
+        {
+          "name": "Gebruikersinfo ophalen (monteur en admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/gebruikers/nieuwe_monteur_2026",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers",
+                "nieuwe_monteur_2026"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Project aanmaken",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"projectnaam\": \"Restauratie Kever\",\r\n    \"merk\": \"Volkswagen\",\r\n    \"model\": \"Kever\",\r\n    \"eigenaarId\": 5,\r\n    \"monteurIds\": [2]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/projecten",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "projecten"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Project opvragen",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/projecten/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "projecten",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Alle projecten van eigenaar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/projecten/eigenaar_id/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "projecten",
+                "eigenaar_id",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Alle lopende projecten in bedrijf",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/projecten",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "projecten"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeel toevoegen aan project",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"onderdeelnaam\": \"Turbo revisie kit\",\r\n    \"artikelnummer\": \"TRB-911-PRO\",\r\n    \"prijs\": 850.00,\r\n    \"bestelstatus\": \"NOG_BESTELLEN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeel wijzigen",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"onderdeelnaam\": \"Turbo revisie kit\",\r\n    \"artikelnummer\": \"TRB-911-PRO\",\r\n    \"prijs\": 950.00,\r\n    \"bestelstatus\": \"NOG_BESTELLEN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeellijst van project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeel verwijderen",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logboekregel aanmaken",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"beschrijving\": \"Turbo gerepareerd met de repair kit.\",\r\n    \"uren\": 2.5,\r\n    \"monteurId\" : 2,\r\n    \"projectId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/logboeken",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "logboeken"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logboekregels inzien per project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/logboeken/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "logboeken",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Factuur aanmaken",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"projectId\": \"2\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/facturen/project/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "facturen",
+                "project",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Factuur bij project bekijken",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/facturen/project/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "facturen",
+                "project",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Document uploaden",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "1d435127-3142-449e-b61b-d7c3ab02cbf1",
+                  "src": "/C:/Users/stimm/Pictures/Porsche964TurboBadBoys_03.jpg"
+                },
+                {
+                  "key": "projectId",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "f72d2b81-728f-43e8-a0af-587cdd73608b"
+                },
+                {
+                  "key": "onderdeelId",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "a0d7e83d-941d-4ee9-8c14-2e0f0f5480b2"
+                },
+                {
+                  "key": "tekst",
+                  "value": "Inspiratiefoto",
+                  "type": "text",
+                  "uuid": "c93de035-749e-492b-9374-196ca0c2d69b"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/documentatie/upload",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Document downloaden",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/documentatie/download/Porsche964TurboBadBoys_03.jpg",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "download",
+                "Porsche964TurboBadBoys_03.jpg"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Documenten inzien per project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/documentatie/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Document verwijderen",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/documentatie/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "documentatie",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Exception voorbeelden",
+      "item": [
+        {
+          "name": "Gebruikersinfo ophalen",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/gebruikers/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Project ophalen",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/projecten/90",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "projecten",
+                "90"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Onderdeel aanmaken",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"onderdeelnaam\": \"Turbo revisie kit\",\r\n    \"artikelnummer\": \"TRB-911-PRO\",\r\n    \"prijs\": -850.00,\r\n    \"bestelstatus\": \"NOG_BESTELLEN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/onderdelen/project/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "onderdelen",
+                "project",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin functies",
+      "item": [
+        {
+          "name": "Eigenaar naar Monteur maken",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "MONTEUR",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/gebruikers/nieuwe_monteur_2026/rol",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "gebruikers",
+                "nieuwe_monteur_2026",
+                "rol"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Alle facturen bekijken",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/facturen",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "facturen"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "client_authentication",
+        "value": "body",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{client-secret}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{client-id}}",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{token-url}}",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{auth-url}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": true,
+        "type": "boolean"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oauth.pstmn.io/v1/browser-callback",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "login",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ]
+}

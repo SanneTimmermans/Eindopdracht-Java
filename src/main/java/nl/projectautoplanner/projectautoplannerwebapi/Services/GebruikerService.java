@@ -6,6 +6,7 @@ import nl.projectautoplanner.projectautoplannerwebapi.Exceptions.RecordNotFoundE
 import nl.projectautoplanner.projectautoplannerwebapi.Repositories.GebruikerRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GebruikerService {
@@ -19,7 +20,7 @@ public class GebruikerService {
     public Gebruiker saveGebruiker(Gebruiker gebruiker) {
         return gebruikerRepository.save(gebruiker);
     }
-
+    @Transactional
     public void deleteGebruiker(Long id, Jwt jwt) {
         String ingelogdeNaam = jwt.getClaimAsString("preferred_username");
         Gebruiker teVerwijderen = gebruikerRepository.findById(id).orElseThrow();
@@ -31,7 +32,7 @@ public class GebruikerService {
             throw new BadRequestException("Je mag alleen je eigen account verwijderen!");
         }
     }
-
+    @Transactional
     public Gebruiker updateGebruiker(Long id, Gebruiker nieuweData) {
         return gebruikerRepository.findById(id).map(bestaandeGebruiker -> {
             bestaandeGebruiker.setGebruikersnaam(nieuweData.getGebruikersnaam());
@@ -42,11 +43,12 @@ public class GebruikerService {
             return gebruikerRepository.save(bestaandeGebruiker);
         }).orElseThrow(() -> new RecordNotFoundException("Gebruiker niet gevonden"));
     }
+    @Transactional
     public Gebruiker getGebruikerByGebruikersnaam(String gebruikersnaam) {
         return gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
                 .orElseThrow(() -> new RecordNotFoundException("Gebruiker niet gevonden."));
     }
-
+    @Transactional
     public Gebruiker updateRolByGebruikersnaam(String gebruikersnaam, Gebruiker.GebruikerRol rolEnum) {
         Gebruiker gebruiker = gebruikerRepository.findByGebruikersnaamIgnoreCase(gebruikersnaam)
                 .orElseThrow(() -> new RecordNotFoundException("Gebruiker met naam " + gebruikersnaam + " niet gevonden"));
